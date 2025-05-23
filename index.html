@@ -2,102 +2,63 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Te amo</title>
   <style>
-    /* Reset y base */
     html, body {
-      margin: 0; padding: 0;
-      height: 100%;
+      margin: 0;
+      padding: 0;
       overflow: hidden;
-      background:
-        radial-gradient(circle at center, #ffe6f2 0%, #cc99cc 80%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #6a004e;
-      user-select: none;
-      position: relative;
-    }
-
-    /* Textura sutil para fondo */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 10%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06) 8%, transparent 35%);
-      pointer-events: none;
-      z-index: 0;
-      mix-blend-mode: screen;
-    }
-
-    /* Contenedor central para el mensaje fijo */
-    .center-message {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 3.5rem;
-      font-weight: 700;
-      color: #af56af;
-      text-shadow:
-        0 0 10px #f8a8f8,
-        0 0 25px #d96ad6,
-        0 0 40px #a843a8;
-      pointer-events: none;
-      letter-spacing: 0.12em;
-      white-space: nowrap;
-      z-index: 10;
+      height: 100%;
+      font-family: 'Georgia', serif;
+      background: linear-gradient(135deg, #1f1c3b 0%, #0b0716 60%, #2e0e3a 100%);
+      color: #ffc0e8;
       user-select: none;
     }
 
-    /* Animación de texto flotante "Te amo" */
     .teamo {
-      position: fixed;
-      top: -40px;
-      color: #d96ad6;
-      font-weight: 700;
-      text-shadow:
-        0 0 6px #efb0ef,
-        0 0 15px #e376e3;
-      user-select: none;
-      pointer-events: none;
+      position: absolute;
+      color: #ff9de3;
+      font-size: 20px;
+      font-weight: 600;
+      animation: fall linear forwards;
       opacity: 0.85;
-      animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
-      filter: drop-shadow(0 0 2px #c354c3);
+      pointer-events: none;
+      text-shadow:
+        0 0 6px #ff7edb,
+        0 0 15px #ff7edb,
+        0 0 25px #ff9de3;
+      filter: drop-shadow(0 0 2px #ff6fc7);
+      transform-origin: center bottom;
       will-change: transform, opacity;
-      z-index: 5;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
+      user-select: none;
     }
 
     @keyframes fall {
       0% {
-        transform: translateY(-40px) scale(0.8);
+        transform: translateY(-50px) scale(1) rotate(0deg);
         opacity: 1;
       }
+      50% {
+        transform: translateY(calc(50vh)) scale(1.15) rotate(5deg);
+        opacity: 0.9;
+      }
       100% {
-        transform: translateY(110vh) scale(1.3);
+        transform: translateY(110vh) scale(0.8) rotate(-5deg);
         opacity: 0;
       }
     }
 
-    /* Canvas de partículas */
     canvas {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
+      top: 0;
+      left: 0;
       z-index: 1;
-      mix-blend-mode: screen;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-
-  <div class="center-message">Te amo 💖</div>
   <canvas id="canvas"></canvas>
 
   <script>
@@ -112,84 +73,78 @@
       h = canvas.height = window.innerHeight;
     });
 
-    // Crear y animar "Te amo" flotantes
+    // Crear "Te amo" animado con variación en tamaño y duración
     function crearTeAmo() {
       const span = document.createElement('span');
       span.className = 'teamo';
       span.textContent = 'Te amo 💖';
 
-      span.style.left = Math.random() * (w - 120) + 'px';
-      span.style.fontSize = (18 + Math.random() * 24) + 'px';
-      span.style.animationDuration = (6 + Math.random() * 5) + 's';
-      span.style.animationName = 'fall';
+      // Posición horizontal aleatoria con margen para no quedar fuera
+      span.style.left = `${Math.random() * (window.innerWidth - 100) + 20}px`;
 
-      // Variar color para más riqueza visual
-      const colors = ['#d96ad6', '#ef7aef', '#b255b2', '#e391e3'];
-      span.style.color = colors[Math.floor(Math.random() * colors.length)];
-      span.style.textShadow = `0 0 ${6 + Math.random() * 8}px ${span.style.color}`;
+      // Tamaño variable para profundidad
+      span.style.fontSize = `${18 + Math.random() * 14}px`;
+
+      // Duración de animación variable para naturalidad
+      span.style.animationDuration = `${5 + Math.random() * 4}s`;
 
       document.body.appendChild(span);
       setTimeout(() => {
         span.remove();
-      }, 11000);
+      }, 9000);
     }
 
-    setInterval(crearTeAmo, 350);
+    setInterval(crearTeAmo, 400);
 
-    // Partículas suaves y románticas
+    // Partículas suaves y etéreas
     let particles = [];
 
     function crearChispas(x, y) {
-      const colors = [
-        'rgba(217,106,214,0.9)',
-        'rgba(255,182,193,0.8)',
-        'rgba(204,153,204,0.8)',
-        'rgba(255,105,180,0.85)'
-      ];
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 18; i++) {
         particles.push({
           x: x,
           y: y,
-          dx: (Math.random() - 0.5) * 4,
-          dy: (Math.random() - 0.5) * 4,
-          radius: Math.random() * 3 + 1,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          life: 60
+          dx: (Math.random() - 0.5) * 3,
+          dy: (Math.random() - 1) * 3 - 0.5, // suben un poco
+          radius: Math.random() * 2 + 1,
+          color: `hsla(${320 + Math.random() * 40}, 80%, 75%, 0.7)`,
+          life: 45
         });
       }
     }
 
     function animar() {
       ctx.clearRect(0, 0, w, h);
+
       particles.forEach((p, i) => {
         p.x += p.dx;
         p.y += p.dy;
-        p.radius *= 0.93;
+        p.radius *= 0.95;
         p.life--;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.shadowColor = p.color;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 8;
         ctx.fill();
 
         if (p.life <= 0 || p.radius < 0.4) {
           particles.splice(i, 1);
         }
       });
+
       requestAnimationFrame(animar);
     }
 
     animar();
 
-    // Crear chispas al hacer click o toque
+    // Eventos para generar partículas en click y toque
     window.addEventListener('click', e => crearChispas(e.clientX, e.clientY));
     window.addEventListener('touchstart', e => {
       const touch = e.touches[0];
       crearChispas(touch.clientX, touch.clientY);
     });
   </script>
-
 </body>
 </html>
