@@ -2,22 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Te amo</title>
   <style>
     html, body {
-      margin: 0; padding: 0; height: 100%; overflow: hidden;
-      background: #000;
-      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
     }
 
     canvas {
+      display: block;
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
       z-index: 0;
-      display: block;
     }
 
     .corazon-fondo {
@@ -25,19 +27,19 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 12vw;
-      color: #ff6edc;
-      text-shadow: 0 0 20px #ff79d9, 0 0 40px #ff79d9;
+      font-size: 10vw;
+      color: #ff00aa;
+      text-shadow: 0 0 15px #ff00aa, 0 0 30px #ff66cc;
       animation: latido 1.5s infinite ease-in-out;
-      user-select: none;
-      z-index: 2;
+      z-index: 1;
+      pointer-events: none;
       white-space: nowrap;
       font-weight: bold;
     }
 
     @keyframes latido {
       0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.15); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
     }
   </style>
 </head>
@@ -49,48 +51,49 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    let w, h;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
+    // Ajustar tamaño
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
 
-    const texto = 'Te amo';
-    const letras = texto.split('');
-    const fontSize = 18;
-    const columns = Math.floor(w / fontSize);
-    const drops = Array.from({ length: columns }, () => Math.random() * -20);
+    const letters = "TEAMO".split("");
+    const fontSize = 16;
+    const columns = Math.floor(width / fontSize);
+    const drops = new Array(columns).fill(1);
 
-    function draw() {
-      // Fondo ligeramente más transparente para evitar acumulación visual
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, w, h);
+    function drawMatrix() {
+      // Fondo semitransparente para "rastro"
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, width, height);
 
-      ctx.fillStyle = '#ff6edc';
-      ctx.font = `${fontSize}px 'Courier New', monospace`;
-      ctx.shadowColor = '#ff79d9';
+      ctx.fillStyle = "#ff66cc"; // rosa hacker
+      ctx.font = `${fontSize}px monospace`;
+      ctx.shadowColor = "#ff00aa";
       ctx.shadowBlur = 8;
 
-      for (let i = 0; i < columns; i++) {
-        const letra = letras[Math.floor(Math.random() * letras.length)];
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
         const x = i * fontSize;
         const y = drops[i] * fontSize;
 
-        ctx.fillText(letra, x, y);
+        ctx.fillText(text, x, y);
 
-        drops[i]++;
-
-        if (y > h && Math.random() > 0.95) {
+        if (y > height && Math.random() > 0.975) {
           drops[i] = 0;
         }
+
+        drops[i]++;
       }
 
-      requestAnimationFrame(draw);
+      requestAnimationFrame(drawMatrix);
     }
 
-    draw();
+    drawMatrix();
+
+    // Ajuste al redimensionar
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
   </script>
 </body>
 </html>
