@@ -1,150 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Te amo</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      font-family: 'Georgia', serif;
-      background: linear-gradient(135deg, #1f1c3b 0%, #0b0716 60%, #2e0e3a 100%);
-      color: #ffc0e8;
-      user-select: none;
-    }
-
-    .teamo {
-      position: absolute;
-      color: #ff9de3;
-      font-size: 20px;
-      font-weight: 600;
-      animation: fall linear forwards;
-      opacity: 0.85;
-      pointer-events: none;
-      text-shadow:
-        0 0 6px #ff7edb,
-        0 0 15px #ff7edb,
-        0 0 25px #ff9de3;
-      filter: drop-shadow(0 0 2px #ff6fc7);
-      transform-origin: center bottom;
-      will-change: transform, opacity;
-      user-select: none;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(-50px) scale(1) rotate(0deg);
-        opacity: 1;
-      }
-      50% {
-        transform: translateY(calc(50vh)) scale(1.15) rotate(5deg);
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateY(110vh) scale(0.8) rotate(-5deg);
-        opacity: 0;
-      }
-    }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      pointer-events: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>Te amo Hacker Style</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: #0a0a0a;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  canvas {
+    display: block;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0a0a0a;
+  }
+</style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+<canvas id="canvas"></canvas>
 
-  <script>
-    // Canvas setup
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
 
-    window.addEventListener('resize', () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    });
+  let w, h;
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
 
-    // Crear "Te amo" animado con variación en tamaño y duración
-    function crearTeAmo() {
-      const span = document.createElement('span');
-      span.className = 'teamo';
-      span.textContent = 'Te amo 💖';
+  const texto = 'Te amo 💖'; // El texto que caerá
+  const letras = texto.split('');
+  const fontSize = 20;
+  const columns = Math.floor(w / fontSize);
+  const drops = [];
 
-      // Posición horizontal aleatoria con margen para no quedar fuera
-      span.style.left = `${Math.random() * (window.innerWidth - 100) + 20}px`;
+  // Inicializa drops con posiciones aleatorias
+  for (let i = 0; i < columns; i++) {
+    drops[i] = Math.floor(Math.random() * h / fontSize);
+  }
 
-      // Tamaño variable para profundidad
-      span.style.fontSize = `${18 + Math.random() * 14}px`;
+  function draw() {
+    // Fondo semi-transparente para efecto "rastro"
+    ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+    ctx.fillRect(0, 0, w, h);
 
-      // Duración de animación variable para naturalidad
-      span.style.animationDuration = `${5 + Math.random() * 4}s`;
+    ctx.fillStyle = '#ff6edc'; // rosa neón
+    ctx.font = `${fontSize}px 'Courier New', monospace`;
+    ctx.shadowColor = '#ff79d9';
+    ctx.shadowBlur = 10;
 
-      document.body.appendChild(span);
-      setTimeout(() => {
-        span.remove();
-      }, 9000);
-    }
+    for (let i = 0; i < columns; i++) {
+      // Elegimos una letra aleatoria del texto "Te amo 💖"
+      const letra = letras[Math.floor(Math.random() * letras.length)];
 
-    setInterval(crearTeAmo, 400);
+      const x = i * fontSize;
+      const y = drops[i] * fontSize;
 
-    // Partículas suaves y etéreas
-    let particles = [];
+      ctx.fillText(letra, x, y);
 
-    function crearChispas(x, y) {
-      for (let i = 0; i < 18; i++) {
-        particles.push({
-          x: x,
-          y: y,
-          dx: (Math.random() - 0.5) * 3,
-          dy: (Math.random() - 1) * 3 - 0.5, // suben un poco
-          radius: Math.random() * 2 + 1,
-          color: `hsla(${320 + Math.random() * 40}, 80%, 75%, 0.7)`,
-          life: 45
-        });
+      // Mover la gota hacia abajo
+      if (y > h && Math.random() > 0.975) {
+        drops[i] = 0;
+      } else {
+        drops[i]++;
       }
     }
+    requestAnimationFrame(draw);
+  }
 
-    function animar() {
-      ctx.clearRect(0, 0, w, h);
-
-      particles.forEach((p, i) => {
-        p.x += p.dx;
-        p.y += p.dy;
-        p.radius *= 0.95;
-        p.life--;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 8;
-        ctx.fill();
-
-        if (p.life <= 0 || p.radius < 0.4) {
-          particles.splice(i, 1);
-        }
-      });
-
-      requestAnimationFrame(animar);
-    }
-
-    animar();
-
-    // Eventos para generar partículas en click y toque
-    window.addEventListener('click', e => crearChispas(e.clientX, e.clientY));
-    window.addEventListener('touchstart', e => {
-      const touch = e.touches[0];
-      crearChispas(touch.clientX, touch.clientY);
-    });
-  </script>
+  draw();
+</script>
 </body>
 </html>
