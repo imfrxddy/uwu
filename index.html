@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>Te amo Hacker Style</title>
+<title>Te amo Hacker Style legible</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%; overflow: hidden;
@@ -35,43 +35,54 @@
   window.addEventListener('resize', resize);
   resize();
 
-  const texto = 'Te amo 💖'; // El texto que caerá
+  const texto = 'Te amo 💖';
   const letras = texto.split('');
-  const fontSize = 20;
+  const fontSize = 28;
   const columns = Math.floor(w / fontSize);
+
+  // Para cada columna, guardamos la posición actual (en "líneas" de texto) de la letra que cae
   const drops = [];
 
-  // Inicializa drops con posiciones aleatorias
   for (let i = 0; i < columns; i++) {
-    drops[i] = Math.floor(Math.random() * h / fontSize);
+    drops[i] = Math.floor(Math.random() * letras.length); // posición inicial dentro del texto
   }
 
   function draw() {
-    // Fondo semi-transparente para efecto "rastro"
-    ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+    // Fondo semitransparente para estelas
+    ctx.fillStyle = 'rgba(10, 10, 10, 0.15)';
     ctx.fillRect(0, 0, w, h);
 
-    ctx.fillStyle = '#ff6edc'; // rosa neón
     ctx.font = `${fontSize}px 'Courier New', monospace`;
-    ctx.shadowColor = '#ff79d9';
-    ctx.shadowBlur = 10;
+    ctx.textBaseline = 'top';
 
     for (let i = 0; i < columns; i++) {
-      // Elegimos una letra aleatoria del texto "Te amo 💖"
-      const letra = letras[Math.floor(Math.random() * letras.length)];
-
       const x = i * fontSize;
-      const y = drops[i] * fontSize;
+      let yPos = drops[i] * fontSize;
 
-      ctx.fillText(letra, x, y);
+      // Dibujamos las letras anteriores como estelas con opacidad decreciente
+      for (let j = 0; j < letras.length; j++) {
+        let index = (drops[i] - j + letras.length) % letras.length;
+        let y = yPos - j * fontSize;
 
-      // Mover la gota hacia abajo
-      if (y > h && Math.random() > 0.975) {
+        if (y < 0 || y > h) continue;
+
+        const alpha = Math.max(0, 1 - j * 0.25); // desvanecimiento de estelas
+        const isHead = (j === 0);
+
+        ctx.fillStyle = isHead ? `rgba(255, 110, 220, 1)` : `rgba(255, 110, 220, ${alpha})`;
+        ctx.shadowColor = isHead ? '#ff79d9' : 'transparent';
+        ctx.shadowBlur = isHead ? 12 : 0;
+
+        ctx.fillText(letras[index], x, y);
+      }
+
+      // Avanzamos la posición, si pasa la pantalla se reinicia para loop continuo
+      drops[i]++;
+      if (drops[i] > letras.length + h / fontSize) {
         drops[i] = 0;
-      } else {
-        drops[i]++;
       }
     }
+
     requestAnimationFrame(draw);
   }
 
