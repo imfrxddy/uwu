@@ -2,84 +2,94 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Te amo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <title>Te amo Hacker Style</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background: radial-gradient(ellipse at center, #101020, #05010d);
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #0a0a0a;
       font-family: 'Courier New', Courier, monospace;
     }
 
-    .column {
-      position: absolute;
-      top: -100px;
-      color: #ff80d5;
-      text-shadow: 0 0 5px #ffaad4;
-      font-size: 18px;
-      animation: fall linear infinite;
-      white-space: nowrap;
-      opacity: 0.85;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(-100px);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(110vh);
-        opacity: 0;
-      }
-    }
-
-    .scanline {
+    canvas {
       position: fixed;
-      width: 100%;
-      height: 2px;
-      background: rgba(255, 174, 230, 0.08);
-      animation: scan 8s linear infinite;
-      pointer-events: none;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
     }
 
-    @keyframes scan {
-      0% { top: 0; }
-      100% { top: 100%; }
+    .corazon-fondo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10vw;
+      color: #ff6edc88;
+      text-shadow: 0 0 30px #ff79d9;
+      animation: latido 1.5s infinite ease-in-out;
+      user-select: none;
+      z-index: 0;
+    }
+
+    @keyframes latido {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
     }
   </style>
 </head>
 <body>
+  <div class="corazon-fondo">TE AMO</div>
+  <canvas id="canvas"></canvas>
 
-<div class="scanline"></div>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
 
-<script>
-  function crearColumna() {
-    const columna = document.createElement('div');
-    columna.className = 'column';
-    const left = Math.random() * window.innerWidth;
-    columna.style.left = `${left}px`;
-    columna.style.animationDuration = (6 + Math.random() * 4) + 's';
-
-    const cantidad = Math.floor(3 + Math.random() * 6);
-    let contenido = '';
-    for (let i = 0; i < cantidad; i++) {
-      contenido += 'Te amo 💖<br>';
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     }
-    columna.innerHTML = contenido;
+    window.addEventListener('resize', resize);
+    resize();
 
-    document.body.appendChild(columna);
+    const texto = 'Te amo 💖';
+    const letras = texto.split('');
+    const fontSize = 20;
+    const columns = Math.floor(w / fontSize);
+    const drops = [];
 
-    setTimeout(() => columna.remove(), 10000);
-  }
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.floor(Math.random() * h / fontSize);
+    }
 
-  setInterval(crearColumna, 400);
-</script>
+    function draw() {
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+      ctx.fillRect(0, 0, w, h);
 
+      ctx.fillStyle = '#ff6edc';
+      ctx.font = `${fontSize}px 'Courier New', monospace`;
+      ctx.shadowColor = '#ff79d9';
+      ctx.shadowBlur = 10;
+
+      for (let i = 0; i < columns; i++) {
+        const letra = letras[Math.floor(Math.random() * letras.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        ctx.fillText(letra, x, y);
+
+        if (y > h && Math.random() > 0.975) {
+          drops[i] = 0;
+        } else {
+          drops[i]++;
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
 </body>
 </html>
