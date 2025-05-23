@@ -16,11 +16,12 @@
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
+      z-index: 0;
       display: block;
     }
 
     .corazon-fondo {
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -29,7 +30,8 @@
       text-shadow: 0 0 30px #ff79d9;
       animation: latido 1.5s infinite ease-in-out;
       user-select: none;
-      z-index: 0;
+      z-index: 1;
+      white-space: nowrap;
     }
 
     @keyframes latido {
@@ -39,8 +41,8 @@
   </style>
 </head>
 <body>
-  <div class="corazon-fondo">TE AMO</div>
   <canvas id="canvas"></canvas>
+  <div class="corazon-fondo">TE AMO</div>
 
   <script>
     const canvas = document.getElementById('canvas');
@@ -54,7 +56,7 @@
     window.addEventListener('resize', resize);
     resize();
 
-    const texto = 'Te amo 💖';
+    const texto = 'Te amo';
     const letras = texto.split('');
     const fontSize = 20;
     const columns = Math.floor(w / fontSize);
