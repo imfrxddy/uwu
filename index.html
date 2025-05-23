@@ -21,21 +21,34 @@
   .cascade {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+    padding: 0 1rem;
+    max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .word {
-    font-size: 4rem;
+    font-size: 6vw; /* tamaño relativo al ancho de la pantalla */
+    max-font-size: 36px; /* para no exceder tamaño en pantallas grandes */
     color: white;
     opacity: 0;
-    transform: translateY(-100px);
+    transform: translateY(-80px);
     text-shadow: 0 0 6px #ff6f91;
     animation-fill-mode: forwards;
     user-select: none;
     cursor: pointer;
+    text-align: center;
   }
 
-  /* Animación para cada palabra, con delay en CSS variables */
+  /* Ajuste máximo para font-size */
+  @media (min-width: 600px) {
+    .word {
+      font-size: 36px;
+    }
+  }
+
+  /* Animación para cada palabra con delay */
   .word:nth-child(1) {
     animation: drop 1s ease forwards;
     animation-delay: 0s;
