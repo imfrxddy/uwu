@@ -2,13 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Te amo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Te amo Hacker Style Medio</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      background: black;
+      margin: 0; padding: 0;
+      background: #0a0a0a;
       overflow: hidden;
       font-family: 'Courier New', monospace;
     }
@@ -28,18 +27,20 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 10vw;
-      color: #ff00aa;
-      text-shadow: 0 0 15px #ff00aa, 0 0 30px #ff66cc;
-      animation: latido 1.5s infinite ease-in-out;
+      color: #ff4fa1; /* rosa medio vibrante */
+      text-shadow: 
+        0 0 8px #ff4fa1,
+        0 0 20px #e03273;
+      animation: latido 1.6s ease-in-out infinite;
       z-index: 1;
       pointer-events: none;
+      font-weight: 700;
       white-space: nowrap;
-      font-weight: bold;
     }
 
     @keyframes latido {
       0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.2); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
     }
   </style>
 </head>
@@ -51,24 +52,22 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    // Ajustar tamaño
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
     const letters = "TEAMO".split("");
-    const fontSize = 16;
+    const fontSize = 18;
     const columns = Math.floor(width / fontSize);
     const drops = new Array(columns).fill(1);
 
     function drawMatrix() {
-      // Fondo semitransparente para "rastro"
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillStyle = "rgba(10, 10, 10, 0.12)"; // rastro oscuro y sutil
       ctx.fillRect(0, 0, width, height);
 
-      ctx.fillStyle = "#ff66cc"; // rosa hacker
+      ctx.fillStyle = "#ff4fa1"; // rosa medio vibrante
       ctx.font = `${fontSize}px monospace`;
-      ctx.shadowColor = "#ff00aa";
-      ctx.shadowBlur = 8;
+      ctx.shadowColor = "#e03273";
+      ctx.shadowBlur = 7;
 
       for (let i = 0; i < drops.length; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
@@ -89,7 +88,6 @@
 
     drawMatrix();
 
-    // Ajuste al redimensionar
     window.addEventListener('resize', () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
