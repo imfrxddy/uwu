@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Te amo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Te amo Hacker Style Suave</title>
   <style>
     html, body {
-      margin: 0; padding: 0;
-      background: #0a0a0a;
+      margin: 0;
+      padding: 0;
+      background: #050505;
       overflow: hidden;
       font-family: 'Courier New', monospace;
     }
@@ -27,20 +28,18 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 10vw;
-      color: #ff4fa1; /* rosa medio vibrante */
-      text-shadow: 
-        0 0 8px #ff4fa1,
-        0 0 20px #e03273;
-      animation: latido 1.6s ease-in-out infinite;
+      color: #d8a7c9; /* rosa pastel suave */
+      text-shadow: 0 0 10px #cfa5c9, 0 0 20px #b695b6;
+      animation: latido 1.5s infinite ease-in-out;
       z-index: 1;
       pointer-events: none;
-      font-weight: 700;
       white-space: nowrap;
+      font-weight: 600;
     }
 
     @keyframes latido {
       0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.15); }
+      50% { transform: translate(-50%, -50%) scale(1.12); }
     }
   </style>
 </head>
@@ -56,18 +55,18 @@
     let height = canvas.height = window.innerHeight;
 
     const letters = "TEAMO".split("");
-    const fontSize = 18;
+    const fontSize = 16;
     const columns = Math.floor(width / fontSize);
     const drops = new Array(columns).fill(1);
 
     function drawMatrix() {
-      ctx.fillStyle = "rgba(10, 10, 10, 0.12)"; // rastro oscuro y sutil
+      ctx.fillStyle = "rgba(5, 5, 5, 0.08)"; // fondo muy oscuro casi negro con poco rastro
       ctx.fillRect(0, 0, width, height);
 
-      ctx.fillStyle = "#ff4fa1"; // rosa medio vibrante
+      ctx.fillStyle = "#cfa5c9"; // rosa pastel
       ctx.font = `${fontSize}px monospace`;
-      ctx.shadowColor = "#e03273";
-      ctx.shadowBlur = 7;
+      ctx.shadowColor = "#b695b6";
+      ctx.shadowBlur = 6;
 
       for (let i = 0; i < drops.length; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
