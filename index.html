@@ -1,82 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>Te amo estilo hacker suave</title>
-<style>
-  html, body {
-    margin: 0; padding: 0; height: 100%; overflow: hidden;
-    background: #0a0a0a;
-    font-family: 'Courier New', Courier, monospace;
-  }
-  canvas {
-    display: block;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #0a0a0a;
-  }
-</style>
-</head>
-<body>
-<canvas id="canvas"></canvas>
-
-<script>
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-
-  let w, h;
-  function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  const texto = 'Te amo 💖';
-  const letras = texto.split('');
-  const fontSize = 26;
-  const columns = Math.floor(w / fontSize);
-
-  const drops = [];
-
-  // Posiciones iniciales aleatorias para suavizar la animación
-  for (let i = 0; i < columns; i++) {
-    drops[i] = Math.floor(Math.random() * letras.length);
-  }
-
-  function draw() {
-    // Fondo con opacidad baja para rastro suave
-    ctx.fillStyle = 'rgba(10, 10, 10, 0.25)';
-    ctx.fillRect(0, 0, w, h);
-
-    ctx.font = `${fontSize}px 'Courier New', monospace`;
-    ctx.textBaseline = 'top';
-    ctx.fillStyle = '#ff99cc'; // rosa suave, sin brillos ni sombras
-
-    for (let i = 0; i < columns; i++) {
-      const x = i * fontSize;
-      let y = drops[i] * fontSize;
-
-      // Solo dibuja la letra "cabeza"
-      const letra = letras[drops[i] % letras.length];
-
-      if (y < h) {
-        ctx.fillText(letra, x, y);
-      }
-
-      drops[i]++;
-      if (drops[i] * fontSize > h + letras.length * fontSize) {
-        drops[i] = 0;
-      }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Te amo</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: radial-gradient(ellipse at center, #1e1e2f 0%, #0d0d1a 100%);
+      font-family: 'Courier New', monospace;
     }
 
-    requestAnimationFrame(draw);
+    .teamo {
+      position: absolute;
+      color: #ffaad4;
+      font-size: 22px;
+      animation: fall ease-in-out;
+      opacity: 0.85;
+      text-align: center;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 1px 1px 2px rgba(255, 170, 212, 0.3);
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  function crearTeAmo() {
+    const span = document.createElement('span');
+    span.className = 'teamo';
+    span.textContent = 'Te amo';
+    span.style.left = Math.random() * window.innerWidth + 'px';
+    span.style.fontSize = (20 + Math.random() * 8) + 'px';
+    span.style.animationDuration = (6 + Math.random() * 4) + 's';
+    document.body.appendChild(span);
+    setTimeout(() => span.remove(), 12000);
   }
 
-  draw();
+  setInterval(crearTeAmo, 500); // más espaciado
 </script>
 </body>
 </html>
