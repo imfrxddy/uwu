@@ -1,232 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Te amo</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      background: radial-gradient(circle at center, #2a1a3d, #0a0511);
-      font-family: 'Georgia', serif;
-    }
-
-    .teamo {
-      position: absolute;
-      color: #ffb3ec;
-      font-weight: 600;
-      font-size: 16px;
-      text-shadow:
-        0 0 5px #ff80d5,
-        0 0 10px #ff66cc,
-        0 0 20px #ff33aa,
-        0 0 30px #ff1a8c;
-      pointer-events: none;
-      white-space: nowrap;
-      user-select: none;
-      filter: drop-shadow(0 0 4px #ff66cc);
-      transform-origin: center;
-      will-change: transform, opacity;
-    }
-
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      background: transparent;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Te amo suave</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: linear-gradient(180deg, #381a47, #1e0f2f);
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .teamo {
+    position: fixed;
+    top: -40px;
+    left: 0;
+    font-size: 18px;
+    color: #f9b1d1;
+    font-weight: 600;
+    text-shadow:
+      0 0 5px #ff9eda,
+      0 0 10px #ff7bc1;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    will-change: transform, opacity;
+    opacity: 1;
+  }
+</style>
 </head>
 <body>
 
-  <canvas id="canvas"></canvas>
+<script>
+  const maxTeamos = 15;  // menos cantidad para no saturar
+  let teamosActivos = [];
 
-  <script>
-    // Setup canvas para partículas de fondo
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
+  function crearTeAmo() {
+    if (teamosActivos.length >= maxTeamos) return;
 
-    window.addEventListener('resize', () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    });
+    const texto = document.createElement('span');
+    texto.className = 'teamo';
+    texto.textContent = 'Te amo 💖';
 
-    // Partículas de fondo lentas y suaves
-    const bgParticlesCount = 80;
-    const bgParticles = [];
+    // Posición horizontal aleatoria (5% a 90% viewport width)
+    const leftPercent = 5 + Math.random() * 85;
+    texto.style.left = leftPercent + 'vw';
 
-    for (let i = 0; i < bgParticlesCount; i++) {
-      bgParticles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        radius: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.5 + 0.1,
-        dx: (Math.random() - 0.5) * 0.1,
-        dy: (Math.random() - 0.5) * 0.1,
-        phase: Math.random() * Math.PI * 2,
-      });
-    }
+    // Tamaño suave entre 16px y 22px
+    texto.style.fontSize = (16 + Math.random() * 6) + 'px';
 
-    function drawBgParticles() {
-      ctx.clearRect(0, 0, w, h);
-      bgParticles.forEach(p => {
-        p.x += p.dx;
-        p.y += p.dy;
-        p.phase += 0.02;
+    document.body.appendChild(texto);
 
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
+    // Variables para la animación
+    const duracion = 8000 + Math.random() * 4000; // 8-12 segundos
+    const startTime = performance.now();
 
-        const glow = (Math.sin(p.phase) + 1) / 2; // va y viene la intensidad
+    // Oscilación horizontal suave
+    const amplitude = 10 + Math.random() * 5;
+    const frequency = 0.0015 + Math.random() * 0.001;
 
-        ctx.beginPath();
-        let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 10);
-        gradient.addColorStop(0, `rgba(255, 182, 236, ${p.alpha * glow})`);
-        gradient.addColorStop(1, 'rgba(255, 182, 236, 0)');
-        ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.radius * 10, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
+    function animar(now) {
+      const elapsed = now - startTime;
+      const progress = elapsed / duracion;
 
-    // Crear "Te amo" animado con más efectos
-    function crearTeAmo() {
-      const span = document.createElement('span');
-      span.className = 'teamo';
-
-      // Diferentes mensajes con emoji, para variar y hacerlo más lindo
-      const mensajes = [
-        'Te amo 💖',
-        'Te amo 😘',
-        'Te amo 🌸',
-        'Te amo 💕',
-        'Te amo 🌹',
-        'Te amo 💗',
-      ];
-      span.textContent = mensajes[Math.floor(Math.random() * mensajes.length)];
-
-      // Tamaño entre 14px y 24px
-      const fontSize = 14 + Math.random() * 10;
-      span.style.fontSize = fontSize + 'px';
-
-      // Duración entre 5 y 9 segundos para que caigan más lento
-      const duration = 5 + Math.random() * 4;
-      span.style.animationDuration = duration + 's';
-
-      // Posición horizontal entre 5% y 95%
-      const leftPos = Math.random() * 90 + 5;
-      span.style.left = leftPos + 'vw';
-
-      // Añadimos animación con JS para caída + oscilación + rotación + escalado suave
-      let start = null;
-      const amplitude = 20 + Math.random() * 15; // amplitud oscilación
-      const frequency = 0.002 + Math.random() * 0.003; // frecuencia oscilación
-      const rotateDir = Math.random() < 0.5 ? -1 : 1; // dirección rotación
-
-      function animarTexto(timestamp) {
-        if (!start) start = timestamp;
-        const elapsed = timestamp - start;
-
-        // Progreso animación (0 a 1)
-        const progress = Math.min(elapsed / (duration * 1000), 1);
-
-        // Caída vertical lineal
-        const y = progress * window.innerHeight;
-
-        // Oscilación horizontal
-        const xOsc = amplitude * Math.sin(frequency * elapsed * 2 * Math.PI);
-
-        // Rotación suave
-        const rot = rotateDir * progress * 30; // hasta 30 grados
-
-        // Escalado pulso suave
-        const scale = 0.8 + 0.4 * Math.sin(progress * Math.PI * 3);
-
-        span.style.transform = `translateX(calc(-50% + ${xOsc}px)) translateY(${y}px) rotate(${rot}deg) scale(${scale.toFixed(2)})`;
-
-        // Opacidad decrece al final
-        if (progress > 0.8) {
-          span.style.opacity = (1 - (progress - 0.8) / 0.2).toFixed(2);
-        }
-
-        if (progress < 1) {
-          requestAnimationFrame(animarTexto);
-        } else {
-          span.remove();
-        }
+      if (progress > 1) {
+        texto.remove();
+        teamosActivos = teamosActivos.filter(t => t !== texto);
+        return;
       }
 
-      requestAnimationFrame(animarTexto);
-      document.body.appendChild(span);
-    }
+      // Caída vertical suave con easing
+      // Usamos easing para que no sea lineal, que empiece lento y termine un poco más rápido:
+      const easeProgress = progress < 0.5 
+        ? 2 * progress * progress 
+        : -1 + (4 - 2 * progress) * progress;
 
-    setInterval(crearTeAmo, 400);
+      const y = easeProgress * window.innerHeight;
 
-    // Animar partículas de fondo
-    function animar() {
-      drawBgParticles();
+      // Oscilación horizontal suave y constante
+      const xOsc = amplitude * Math.sin(frequency * elapsed * 2 * Math.PI);
+
+      // Escalado suave que aumenta un poco y vuelve a la normalidad
+      const scale = 1 + 0.15 * Math.sin(progress * Math.PI * 2);
+
+      texto.style.transform = `translateX(calc(-50% + ${xOsc.toFixed(2)}px)) translateY(${y.toFixed(2)}px) scale(${scale.toFixed(2)})`;
+      texto.style.opacity = (1 - progress).toFixed(2);
+
       requestAnimationFrame(animar);
     }
 
-    animar();
+    teamosActivos.push(texto);
+    requestAnimationFrame(animar);
+  }
 
-    // Efecto chispas (opcional, sigue igual)
-    let particles = [];
+  setInterval(crearTeAmo, 600);
+</script>
 
-    function crearChispas(x, y) {
-      for (let i = 0; i < 20; i++) {
-        particles.push({
-          x: x,
-          y: y,
-          dx: (Math.random() - 0.5) * 4,
-          dy: (Math.random() - 0.5) * 4,
-          radius: Math.random() * 3 + 1,
-          color: `hsl(${Math.random() * 60 + 300}, 100%, 80%)`,
-          life: 40
-        });
-      }
-    }
-
-    function animarChispas() {
-      particles.forEach((p, i) => {
-        p.x += p.dx;
-        p.y += p.dy;
-        p.radius *= 0.96;
-        p.life--;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-
-        if (p.life <= 0 || p.radius < 0.5) {
-          particles.splice(i, 1);
-        }
-      });
-    }
-
-    function loop() {
-      animarChispas();
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    window.addEventListener('click', e => crearChispas(e.clientX, e.clientY));
-    window.addEventListener('touchstart', e => {
-      const touch = e.touches[0];
-      crearChispas(touch.clientX, touch.clientY);
-    });
-
-  </script>
 </body>
 </html>
