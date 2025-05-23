@@ -1,107 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Te Amo</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Pacifico', cursive;
-    overflow: hidden;
-  }
-
-  .cascade {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0 1rem;
-    max-width: 300px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .word {
-    font-size: 6vw; /* tamaño relativo al ancho de la pantalla */
-    max-font-size: 36px; /* para no exceder tamaño en pantallas grandes */
-    color: white;
-    opacity: 0;
-    transform: translateY(-80px);
-    text-shadow: 0 0 6px #ff6f91;
-    animation-fill-mode: forwards;
-    user-select: none;
-    cursor: pointer;
-    text-align: center;
-  }
-
-  /* Ajuste máximo para font-size */
-  @media (min-width: 600px) {
-    .word {
-      font-size: 36px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Te amo</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, #1e1e2f, #0d0d1a);
+      height: 100%;
+      font-family: 'Georgia', serif;
     }
-  }
 
-  /* Animación para cada palabra con delay */
-  .word:nth-child(1) {
-    animation: drop 1s ease forwards;
-    animation-delay: 0s;
-  }
-  .word:nth-child(2) {
-    animation: drop 1s ease forwards;
-    animation-delay: 0.5s;
-  }
-  .word:nth-child(3) {
-    animation: drop 1s ease forwards;
-    animation-delay: 1s;
-  }
-  .word:nth-child(4) {
-    animation: drop 1s ease forwards;
-    animation-delay: 1.5s;
-  }
-  .word:nth-child(5) {
-    animation: drop 1s ease forwards;
-    animation-delay: 2s;
-  }
-  .word:nth-child(6) {
-    animation: drop 1s ease forwards;
-    animation-delay: 2.5s;
-  }
-
-  @keyframes drop {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-      text-shadow: 0 0 12px #ff6f91, 0 0 24px #ff6f91;
+    .teamo {
+      position: absolute;
+      color: #ffb3ec;
+      font-size: 16px;
+      animation: fall linear forwards;
+      opacity: 0.9;
+      text-shadow: 0 0 10px #ff80d5;
+      pointer-events: none;
+      white-space: nowrap; /* evita que las palabras se rompan en varias líneas */
+      transform: translateX(-50%);
     }
-  }
 
-  /* Efecto luces al tocar la palabra */
-  .word:active {
-    text-shadow:
-      0 0 20px #fff,
-      0 0 40px #ff6f91,
-      0 0 60px #ff6f91,
-      0 0 80px #ff6f91;
-    transform: scale(1.1);
-    transition: transform 0.2s;
-  }
-</style>
+    @keyframes fall {
+      0% { transform: translateY(-40px) translateX(-50%); opacity: 1; }
+      100% { transform: translateY(100vh) translateX(-50%); opacity: 0; }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
-  <div class="cascade">
-    <div class="word">Te</div>
-    <div class="word">Amo</div>
-    <div class="word">Te</div>
-    <div class="word">Amo</div>
-    <div class="word">Te</div>
-    <div class="word">Amo</div>
-  </div>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    // Ajustes de fondo de partículas
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    // Crear "Te amo" animado
+    function crearTeAmo() {
+      const span = document.createElement('span');
+      span.className = 'teamo';
+      span.textContent = 'Te amo 💖';
+
+      const fontSize = 14 + Math.random() * 10; // Tamaño entre 14px y 24px
+      span.style.fontSize = fontSize + 'px';
+
+      span.style.animationDuration = (4 + Math.random() * 3) + 's';
+
+      // Posición horizontal entre 5% y 95% del ancho (evita cortarse en los bordes)
+      const leftPos = Math.random() * 90 + 5;
+      span.style.left = leftPos + 'vw';
+
+      document.body.appendChild(span);
+
+      setTimeout(() => span.remove(), 8000);
+    }
+
+    setInterval(crearTeAmo, 350);
+
+    // Partículas suaves
+    let particles = [];
+
+    function crearChispas(x, y) {
+      for (let i = 0; i < 20; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          dx: (Math.random() - 0.5) * 4,
+          dy: (Math.random() - 0.5) * 4,
+          radius: Math.random() * 3 + 1,
+          color: `hsl(${Math.random() * 60 + 300}, 100%, 80%)`,
+          life: 40
+        });
+      }
+    }
+
+    function animar() {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach((p, i) => {
+        p.x += p.dx;
+        p.y += p.dy;
+        p.radius *= 0.96;
+        p.life--;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        if (p.life <= 0 || p.radius < 0.5) {
+          particles.splice(i, 1);
+        }
+      });
+      requestAnimationFrame(animar);
+    }
+
+    animar();
+
+    window.addEventListener('click', e => crearChispas(e.clientX, e.clientY));
+    window.addEventListener('touchstart', e => {
+      const touch = e.touches[0];
+      crearChispas(touch.clientX, touch.clientY);
+    });
+  </script>
 </body>
 </html>
