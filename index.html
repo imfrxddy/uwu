@@ -44,7 +44,7 @@
   const maxTeamos = 12;
   let teamosActivos = [];
 
-  // Crear "Te amo" con caída suave y oscilación tipo burbuja/pétalo
+  // Crear "Te amo" con caída vertical y suave
   function crearTeAmo() {
     if (teamosActivos.length >= maxTeamos) return;
 
@@ -61,10 +61,6 @@
     const duracion = 10000 + Math.random() * 4000; // 10-14 seg
     const startTime = performance.now();
 
-    // Oscilación horizontal suave
-    const amplitude = 12 + Math.random() * 6;
-    const frequency = 0.0012 + Math.random() * 0.001;
-
     function animar(now) {
       const elapsed = now - startTime;
       const progress = elapsed / duracion;
@@ -75,21 +71,18 @@
         return;
       }
 
-      // Caída con easing suave (ease-in-out)
+      // Caída vertical con easing suave (ease-in-out)
       const easeProgress = progress < 0.5
         ? 2 * progress * progress
         : -1 + (4 - 2 * progress) * progress;
 
       const y = easeProgress * window.innerHeight;
 
-      // Oscilación horizontal para efecto suave y natural
-      const xOsc = amplitude * Math.sin(frequency * elapsed * 2 * Math.PI);
-
       // Opacidad y escala para efecto delicado
       const opacity = 1 - progress * 0.95;
       const scale = 0.9 + 0.2 * Math.sin(progress * Math.PI * 2);
 
-      texto.style.transform = `translateX(calc(-50% + ${xOsc.toFixed(2)}px)) translateY(${y.toFixed(2)}px) scale(${scale.toFixed(2)})`;
+      texto.style.transform = `translateX(-50%) translateY(${y.toFixed(2)}px) scale(${scale.toFixed(2)})`;
       texto.style.opacity = opacity.toFixed(2);
 
       requestAnimationFrame(animar);
