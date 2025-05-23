@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>Te amo Hacker Style legible</title>
+<title>Te amo estilo hacker suave</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%; overflow: hidden;
@@ -37,48 +37,38 @@
 
   const texto = 'Te amo 💖';
   const letras = texto.split('');
-  const fontSize = 28;
+  const fontSize = 26;
   const columns = Math.floor(w / fontSize);
 
-  // Para cada columna, guardamos la posición actual (en "líneas" de texto) de la letra que cae
   const drops = [];
 
+  // Posiciones iniciales aleatorias para suavizar la animación
   for (let i = 0; i < columns; i++) {
-    drops[i] = Math.floor(Math.random() * letras.length); // posición inicial dentro del texto
+    drops[i] = Math.floor(Math.random() * letras.length);
   }
 
   function draw() {
-    // Fondo semitransparente para estelas
-    ctx.fillStyle = 'rgba(10, 10, 10, 0.15)';
+    // Fondo con opacidad baja para rastro suave
+    ctx.fillStyle = 'rgba(10, 10, 10, 0.25)';
     ctx.fillRect(0, 0, w, h);
 
     ctx.font = `${fontSize}px 'Courier New', monospace`;
     ctx.textBaseline = 'top';
+    ctx.fillStyle = '#ff99cc'; // rosa suave, sin brillos ni sombras
 
     for (let i = 0; i < columns; i++) {
       const x = i * fontSize;
-      let yPos = drops[i] * fontSize;
+      let y = drops[i] * fontSize;
 
-      // Dibujamos las letras anteriores como estelas con opacidad decreciente
-      for (let j = 0; j < letras.length; j++) {
-        let index = (drops[i] - j + letras.length) % letras.length;
-        let y = yPos - j * fontSize;
+      // Solo dibuja la letra "cabeza"
+      const letra = letras[drops[i] % letras.length];
 
-        if (y < 0 || y > h) continue;
-
-        const alpha = Math.max(0, 1 - j * 0.25); // desvanecimiento de estelas
-        const isHead = (j === 0);
-
-        ctx.fillStyle = isHead ? `rgba(255, 110, 220, 1)` : `rgba(255, 110, 220, ${alpha})`;
-        ctx.shadowColor = isHead ? '#ff79d9' : 'transparent';
-        ctx.shadowBlur = isHead ? 12 : 0;
-
-        ctx.fillText(letras[index], x, y);
+      if (y < h) {
+        ctx.fillText(letra, x, y);
       }
 
-      // Avanzamos la posición, si pasa la pantalla se reinicia para loop continuo
       drops[i]++;
-      if (drops[i] > letras.length + h / fontSize) {
+      if (drops[i] * fontSize > h + letras.length * fontSize) {
         drops[i] = 0;
       }
     }
