@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>Te amo Hacker Style</title>
+  <title>Te amo</title>
   <style>
     html, body {
       margin: 0; padding: 0; height: 100%; overflow: hidden;
@@ -61,21 +61,17 @@
     const letras = texto.split('');
     const fontSize = 18;
     const columns = Math.floor(w / fontSize);
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = Math.floor(Math.random() * h / fontSize);
-    }
+    const drops = Array.from({ length: columns }, () => Math.random() * -20);
 
     function draw() {
-      // Fondo más oscuro con más opacidad para que resalte el texto
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+      // Fondo ligeramente más transparente para evitar acumulación visual
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, w, h);
 
       ctx.fillStyle = '#ff6edc';
       ctx.font = `${fontSize}px 'Courier New', monospace`;
       ctx.shadowColor = '#ff79d9';
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 8;
 
       for (let i = 0; i < columns; i++) {
         const letra = letras[Math.floor(Math.random() * letras.length)];
@@ -84,10 +80,10 @@
 
         ctx.fillText(letra, x, y);
 
-        if (y > h && Math.random() > 0.975) {
+        drops[i]++;
+
+        if (y > h && Math.random() > 0.95) {
           drops[i] = 0;
-        } else {
-          drops[i]++;
         }
       }
 
