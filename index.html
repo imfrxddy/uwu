@@ -8,57 +8,78 @@
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       height: 100%;
-      background: radial-gradient(ellipse at center, #1e1e2f 0%, #0d0d1a 100%);
-      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      background: radial-gradient(ellipse at center, #101020, #05010d);
+      font-family: 'Courier New', Courier, monospace;
     }
 
-    .teamo {
+    .column {
       position: absolute;
-      color: #ffaad4;
-      font-size: 22px;
-      animation: fall ease-in-out;
-      opacity: 0.85;
-      text-align: center;
+      top: -100px;
+      color: #ff80d5;
+      text-shadow: 0 0 5px #ffaad4;
+      font-size: 18px;
+      animation: fall linear infinite;
       white-space: nowrap;
-      pointer-events: none;
-      text-shadow: 1px 1px 2px rgba(255, 170, 212, 0.3);
+      opacity: 0.85;
     }
 
     @keyframes fall {
       0% {
-        transform: translateY(-30px);
+        transform: translateY(-100px);
         opacity: 0;
       }
       10% {
         opacity: 1;
       }
-      90% {
-        opacity: 1;
-      }
       100% {
-        transform: translateY(100vh);
+        transform: translateY(110vh);
         opacity: 0;
       }
+    }
+
+    .scanline {
+      position: fixed;
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 174, 230, 0.08);
+      animation: scan 8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
     }
   </style>
 </head>
 <body>
 
+<div class="scanline"></div>
+
 <script>
-  function crearTeAmo() {
-    const span = document.createElement('span');
-    span.className = 'teamo';
-    span.textContent = 'Te amo';
-    span.style.left = Math.random() * window.innerWidth + 'px';
-    span.style.fontSize = (20 + Math.random() * 8) + 'px';
-    span.style.animationDuration = (6 + Math.random() * 4) + 's';
-    document.body.appendChild(span);
-    setTimeout(() => span.remove(), 12000);
+  function crearColumna() {
+    const columna = document.createElement('div');
+    columna.className = 'column';
+    const left = Math.random() * window.innerWidth;
+    columna.style.left = `${left}px`;
+    columna.style.animationDuration = (6 + Math.random() * 4) + 's';
+
+    const cantidad = Math.floor(3 + Math.random() * 6);
+    let contenido = '';
+    for (let i = 0; i < cantidad; i++) {
+      contenido += 'Te amo 💖<br>';
+    }
+    columna.innerHTML = contenido;
+
+    document.body.appendChild(columna);
+
+    setTimeout(() => columna.remove(), 10000);
   }
 
-  setInterval(crearTeAmo, 500); // más espaciado
+  setInterval(crearColumna, 400);
 </script>
+
 </body>
 </html>
