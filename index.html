@@ -9,95 +9,86 @@
 
   body {
     margin: 0;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-    overflow: hidden;
-    font-family: 'Pacifico', cursive;
-  }
-
-  .container {
-    position: relative;
     height: 100vh;
-    width: 100vw;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
     display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Pacifico', cursive;
     overflow: hidden;
-    padding-top: 20px;
   }
 
-  .column {
+  .cascade {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
 
   .word {
-    color: #fff;
-    font-size: 2.5rem;
-    text-shadow: 0 0 6px #ff6f91;
+    font-size: 4rem;
+    color: white;
     opacity: 0;
-    animation: drop 4s ease-in-out forwards;
+    transform: translateY(-100px);
+    text-shadow: 0 0 6px #ff6f91;
+    animation-fill-mode: forwards;
+    user-select: none;
+    cursor: pointer;
   }
 
-  /* Animaciones en columnas con delays */
-  .column:nth-child(1) .word {
-    animation-delay: calc(var(--i) * 0.6s);
+  /* Animación para cada palabra, con delay en CSS variables */
+  .word:nth-child(1) {
+    animation: drop 1s ease forwards;
+    animation-delay: 0s;
   }
-  .column:nth-child(2) .word {
-    animation-delay: calc(var(--i) * 0.7s + 0.2s);
+  .word:nth-child(2) {
+    animation: drop 1s ease forwards;
+    animation-delay: 0.5s;
   }
-  .column:nth-child(3) .word {
-    animation-delay: calc(var(--i) * 0.8s + 0.4s);
+  .word:nth-child(3) {
+    animation: drop 1s ease forwards;
+    animation-delay: 1s;
+  }
+  .word:nth-child(4) {
+    animation: drop 1s ease forwards;
+    animation-delay: 1.5s;
+  }
+  .word:nth-child(5) {
+    animation: drop 1s ease forwards;
+    animation-delay: 2s;
+  }
+  .word:nth-child(6) {
+    animation: drop 1s ease forwards;
+    animation-delay: 2.5s;
   }
 
   @keyframes drop {
-    0% {
-      opacity: 0;
-      transform: translateY(-150px) scale(0.5);
-    }
-    50% {
+    to {
       opacity: 1;
-      transform: translateY(30px) scale(1.1);
-      text-shadow: 0 0 10px #ff6f91, 0 0 20px #ff6f91;
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      text-shadow: 0 0 6px #ff6f91;
+      transform: translateY(0);
+      text-shadow: 0 0 12px #ff6f91, 0 0 24px #ff6f91;
     }
   }
 
-  /* Luces al tocar */
-  body:active .word {
-    animation-play-state: paused;
+  /* Efecto luces al tocar la palabra */
+  .word:active {
     text-shadow:
-      0 0 15px #fff,
-      0 0 30px #ff6f91,
-      0 0 45px #ff6f91,
-      0 0 60px #ff6f91;
+      0 0 20px #fff,
+      0 0 40px #ff6f91,
+      0 0 60px #ff6f91,
+      0 0 80px #ff6f91;
+    transform: scale(1.1);
+    transition: transform 0.2s;
   }
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="column">
-      <div class="word" style="--i:1">Te</div>
-      <div class="word" style="--i:2">Amo</div>
-      <div class="word" style="--i:3">Te</div>
-      <div class="word" style="--i:4">Amo</div>
-    </div>
-    <div class="column">
-      <div class="word" style="--i:1">Amo</div>
-      <div class="word" style="--i:2">Te</div>
-      <div class="word" style="--i:3">Amo</div>
-      <div class="word" style="--i:4">Te</div>
-    </div>
-    <div class="column">
-      <div class="word" style="--i:1">Te</div>
-      <div class="word" style="--i:2">Amo</div>
-      <div class="word" style="--i:3">Amo</div>
-      <div class="word" style="--i:4">Te</div>
-    </div>
+  <div class="cascade">
+    <div class="word">Te</div>
+    <div class="word">Amo</div>
+    <div class="word">Te</div>
+    <div class="word">Amo</div>
+    <div class="word">Te</div>
+    <div class="word">Amo</div>
   </div>
 </body>
 </html>
