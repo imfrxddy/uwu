@@ -3,38 +3,48 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Te amo suave</title>
+<title>Te amo - Elegante</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%;
-    background: linear-gradient(180deg, #381a47, #1e0f2f);
     overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at center, #3f1f44 0%, #10061a 90%);
+    font-family: 'Palatino Linotype', 'Georgia', serif;
   }
   .teamo {
     position: fixed;
-    top: -40px;
+    top: -30px;
     left: 0;
-    font-size: 18px;
-    color: #f9b1d1;
+    font-size: 16px;
+    color: #ff9fd6;
     font-weight: 600;
-    text-shadow:
-      0 0 5px #ff9eda,
-      0 0 10px #ff7bc1;
+    text-shadow: 0 0 10px #ff6bb3;
     pointer-events: none;
     user-select: none;
     white-space: nowrap;
     will-change: transform, opacity;
     opacity: 1;
+    filter: drop-shadow(0 0 3px #ff8fba);
+  }
+  canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
   }
 </style>
 </head>
 <body>
 
+<canvas id="canvas"></canvas>
+
 <script>
-  const maxTeamos = 15;  // menos cantidad para no saturar
+  const maxTeamos = 12;
   let teamosActivos = [];
 
+  // Crear "Te amo" con caída suave y oscilación tipo burbuja/pétalo
   function crearTeAmo() {
     if (teamosActivos.length >= maxTeamos) return;
 
@@ -42,22 +52,18 @@
     texto.className = 'teamo';
     texto.textContent = 'Te amo 💖';
 
-    // Posición horizontal aleatoria (5% a 90% viewport width)
-    const leftPercent = 5 + Math.random() * 85;
+    // Posición horizontal entre 5% y 95% de ancho viewport
+    const leftPercent = 5 + Math.random() * 90;
     texto.style.left = leftPercent + 'vw';
-
-    // Tamaño suave entre 16px y 22px
-    texto.style.fontSize = (16 + Math.random() * 6) + 'px';
 
     document.body.appendChild(texto);
 
-    // Variables para la animación
-    const duracion = 8000 + Math.random() * 4000; // 8-12 segundos
+    const duracion = 10000 + Math.random() * 4000; // 10-14 seg
     const startTime = performance.now();
 
     // Oscilación horizontal suave
-    const amplitude = 10 + Math.random() * 5;
-    const frequency = 0.0015 + Math.random() * 0.001;
+    const amplitude = 12 + Math.random() * 6;
+    const frequency = 0.0012 + Math.random() * 0.001;
 
     function animar(now) {
       const elapsed = now - startTime;
@@ -69,22 +75,22 @@
         return;
       }
 
-      // Caída vertical suave con easing
-      // Usamos easing para que no sea lineal, que empiece lento y termine un poco más rápido:
-      const easeProgress = progress < 0.5 
-        ? 2 * progress * progress 
+      // Caída con easing suave (ease-in-out)
+      const easeProgress = progress < 0.5
+        ? 2 * progress * progress
         : -1 + (4 - 2 * progress) * progress;
 
       const y = easeProgress * window.innerHeight;
 
-      // Oscilación horizontal suave y constante
+      // Oscilación horizontal para efecto suave y natural
       const xOsc = amplitude * Math.sin(frequency * elapsed * 2 * Math.PI);
 
-      // Escalado suave que aumenta un poco y vuelve a la normalidad
-      const scale = 1 + 0.15 * Math.sin(progress * Math.PI * 2);
+      // Opacidad y escala para efecto delicado
+      const opacity = 1 - progress * 0.95;
+      const scale = 0.9 + 0.2 * Math.sin(progress * Math.PI * 2);
 
       texto.style.transform = `translateX(calc(-50% + ${xOsc.toFixed(2)}px)) translateY(${y.toFixed(2)}px) scale(${scale.toFixed(2)})`;
-      texto.style.opacity = (1 - progress).toFixed(2);
+      texto.style.opacity = opacity.toFixed(2);
 
       requestAnimationFrame(animar);
     }
@@ -93,7 +99,64 @@
     requestAnimationFrame(animar);
   }
 
-  setInterval(crearTeAmo, 600);
+  setInterval(crearTeAmo, 900);
+
+  // Fondo con partículas luminosas muy suaves y lentas
+
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = window.innerWidth;
+  let h = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  });
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * w;
+      this.y = Math.random() * h;
+      this.radius = 1 + Math.random() * 1.5;
+      this.alpha = 0.15 + Math.random() * 0.25;
+      this.dx = (Math.random() - 0.5) * 0.15;
+      this.dy = (Math.random() - 0.5) * 0.15;
+    }
+    update() {
+      this.x += this.dx;
+      this.y += this.dy;
+
+      // Wrap around edges
+      if(this.x < 0) this.x = w;
+      if(this.x > w) this.x = 0;
+      if(this.y < 0) this.y = h;
+      if(this.y > h) this.y = 0;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 140, 180, ${this.alpha})`;
+      ctx.shadowColor = `rgba(255, 140, 180, ${this.alpha})`;
+      ctx.shadowBlur = 6;
+      ctx.fill();
+    }
+  }
+
+  let particles = [];
+  for(let i = 0; i < 60; i++) {
+    particles.push(new Particle());
+  }
+
+  function animarFondo() {
+    ctx.clearRect(0, 0, w, h);
+    for(const p of particles) {
+      p.update();
+      p.draw();
+    }
+    requestAnimationFrame(animarFondo);
+  }
+  animarFondo();
+
 </script>
 
 </body>
