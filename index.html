@@ -7,7 +7,7 @@
   <style>
     html, body {
       margin: 0; padding: 0; height: 100%; overflow: hidden;
-      background: #0a0a0a;
+      background: #000;
       font-family: 'Courier New', Courier, monospace;
     }
 
@@ -25,18 +25,19 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 10vw;
-      color: #ff6edc88;
-      text-shadow: 0 0 30px #ff79d9;
+      font-size: 12vw;
+      color: #ff6edc;
+      text-shadow: 0 0 20px #ff79d9, 0 0 40px #ff79d9;
       animation: latido 1.5s infinite ease-in-out;
       user-select: none;
-      z-index: 1;
+      z-index: 2;
       white-space: nowrap;
+      font-weight: bold;
     }
 
     @keyframes latido {
       0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.1); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
     }
   </style>
 </head>
@@ -58,7 +59,7 @@
 
     const texto = 'Te amo';
     const letras = texto.split('');
-    const fontSize = 20;
+    const fontSize = 18;
     const columns = Math.floor(w / fontSize);
     const drops = [];
 
@@ -67,7 +68,8 @@
     }
 
     function draw() {
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+      // Fondo más oscuro con más opacidad para que resalte el texto
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
       ctx.fillRect(0, 0, w, h);
 
       ctx.fillStyle = '#ff6edc';
@@ -88,6 +90,7 @@
           drops[i]++;
         }
       }
+
       requestAnimationFrame(draw);
     }
 
